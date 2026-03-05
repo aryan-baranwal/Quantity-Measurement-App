@@ -2,17 +2,17 @@ package com.bridgelabz;
 
 public class QuantityMeasurementApp {
 
-    // Generic Length class implementing DRY principle
     public static class Length {
 
         private final double value;
         private final LengthUnit unit;
 
-        // Enum representing supported units
         public enum LengthUnit {
 
             FEET(12.0),
-            INCHES(1.0);
+            INCHES(1.0),
+            YARDS(36.0),
+            CENTIMETERS(0.393701);
 
             private final double conversionFactor;
 
@@ -30,12 +30,10 @@ public class QuantityMeasurementApp {
             this.unit = unit;
         }
 
-        // Convert value to base unit (inches)
         private double convertToBaseUnit() {
             return value * unit.getConversionFactor();
         }
 
-        // Compare two lengths
         public boolean compare(Length other) {
             return Double.compare(this.convertToBaseUnit(), other.convertToBaseUnit()) == 0;
         }
@@ -55,32 +53,21 @@ public class QuantityMeasurementApp {
         }
     }
 
-    // Demo methods
+    public static void main(String[] args) {
 
-    public static void demonstrateFeetEquality() {
-        Length l1 = new Length(1.0, Length.LengthUnit.FEET);
-        Length l2 = new Length(1.0, Length.LengthUnit.FEET);
-
-        System.out.println("Feet equality: " + l1.equals(l2));
-    }
-
-    public static void demonstrateInchesEquality() {
-        Length l1 = new Length(1.0, Length.LengthUnit.INCHES);
-        Length l2 = new Length(1.0, Length.LengthUnit.INCHES);
-
-        System.out.println("Inches equality: " + l1.equals(l2));
-    }
-
-    public static void demonstrateFeetInchesComparison() {
         Length l1 = new Length(1.0, Length.LengthUnit.FEET);
         Length l2 = new Length(12.0, Length.LengthUnit.INCHES);
 
-        System.out.println("Feet vs Inches equal: " + l1.equals(l2));
-    }
+        System.out.println("Feet vs Inches: " + l1.equals(l2));
 
-    public static void main(String[] args) {
-        demonstrateFeetEquality();
-        demonstrateInchesEquality();
-        demonstrateFeetInchesComparison();
+        Length l3 = new Length(1.0, Length.LengthUnit.YARDS);
+        Length l4 = new Length(36.0, Length.LengthUnit.INCHES);
+
+        System.out.println("Yard vs Inches: " + l3.equals(l4));
+
+        Length l5 = new Length(1.0, Length.LengthUnit.CENTIMETERS);
+        Length l6 = new Length(0.393701, Length.LengthUnit.INCHES);
+
+        System.out.println("CM vs Inches: " + l5.equals(l6));
     }
 }
