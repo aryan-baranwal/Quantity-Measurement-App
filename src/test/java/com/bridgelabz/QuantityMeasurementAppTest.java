@@ -3,62 +3,56 @@ package com.bridgelabz;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.bridgelabz.QuantityMeasurementApp.Length;
 import com.bridgelabz.QuantityMeasurementApp.Length.LengthUnit;
 
 public class QuantityMeasurementAppTest {
 
     @Test
-    void testEquality_YardToYard_SameValue() {
-        Length l1 = new Length(1.0, LengthUnit.YARDS);
-        Length l2 = new Length(1.0, LengthUnit.YARDS);
-
-        assertTrue(l1.equals(l2));
+    void testConversion_FeetToInches() {
+        assertEquals(12.0,
+                QuantityMeasurementApp.convert(1.0, LengthUnit.FEET, LengthUnit.INCHES),
+                0.0001);
     }
 
     @Test
-    void testEquality_YardToFeet_EquivalentValue() {
-        Length l1 = new Length(1.0, LengthUnit.YARDS);
-        Length l2 = new Length(3.0, LengthUnit.FEET);
-
-        assertTrue(l1.equals(l2));
+    void testConversion_InchesToFeet() {
+        assertEquals(2.0,
+                QuantityMeasurementApp.convert(24.0, LengthUnit.INCHES, LengthUnit.FEET),
+                0.0001);
     }
 
     @Test
-    void testEquality_YardToInches_EquivalentValue() {
-        Length l1 = new Length(1.0, LengthUnit.YARDS);
-        Length l2 = new Length(36.0, LengthUnit.INCHES);
-
-        assertTrue(l1.equals(l2));
+    void testConversion_YardsToInches() {
+        assertEquals(36.0,
+                QuantityMeasurementApp.convert(1.0, LengthUnit.YARDS, LengthUnit.INCHES),
+                0.0001);
     }
 
     @Test
-    void testEquality_CentimeterToInch() {
-        Length l1 = new Length(1.0, LengthUnit.CENTIMETERS);
-        Length l2 = new Length(0.393701, LengthUnit.INCHES);
-
-        assertTrue(l1.equals(l2));
+    void testConversion_InchesToYards() {
+        assertEquals(2.0,
+                QuantityMeasurementApp.convert(72.0, LengthUnit.INCHES, LengthUnit.YARDS),
+                0.0001);
     }
 
     @Test
-    void testEquality_YardDifferentValue() {
-        Length l1 = new Length(1.0, LengthUnit.YARDS);
-        Length l2 = new Length(2.0, LengthUnit.YARDS);
-
-        assertFalse(l1.equals(l2));
+    void testConversion_CentimetersToInches() {
+        assertEquals(1.0,
+                QuantityMeasurementApp.convert(2.54, LengthUnit.CENTIMETERS, LengthUnit.INCHES),
+                0.01);
     }
 
     @Test
-    void testEquality_NullComparison() {
-        Length l1 = new Length(1.0, LengthUnit.FEET);
-
-        assertFalse(l1.equals(null));
+    void testConversion_ZeroValue() {
+        assertEquals(0.0,
+                QuantityMeasurementApp.convert(0.0, LengthUnit.FEET, LengthUnit.INCHES),
+                0.0001);
     }
 
     @Test
-    void testEquality_SameReference() {
-        Length l1 = new Length(2.0, LengthUnit.FEET);
-
-        assertTrue(l1.equals(l1));
+    void testConversion_NegativeValue() {
+        assertEquals(-12.0,
+                QuantityMeasurementApp.convert(-1.0, LengthUnit.FEET, LengthUnit.INCHES),
+                0.0001);
     }
 }
