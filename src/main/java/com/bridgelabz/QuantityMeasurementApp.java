@@ -8,30 +8,39 @@ public class QuantityMeasurementApp {
         private final LengthUnit unit;
 
         public enum LengthUnit {
-
             FEET(12.0),
             INCHES(1.0),
             YARDS(36.0),
             CENTIMETERS(0.393701);
 
-            private final double conversionFactor;
+            private final double factor;
 
-            LengthUnit(double conversionFactor) {
-                this.conversionFactor = conversionFactor;
+            LengthUnit(double factor) {
+                this.factor = factor;
             }
 
-            public double getConversionFactor() {
-                return conversionFactor;
+            public double getFactor() {
+                return factor;
             }
         }
 
         public Length(double value, LengthUnit unit) {
+            if (!Double.isFinite(value))
+                throw new IllegalArgumentException("Invalid value");
+
+            if (unit == null)
+                throw new IllegalArgumentException("Unit cannot be null");
+
             this.value = value;
             this.unit = unit;
         }
 
         private double convertToBaseUnit() {
-            return value * unit.getConversionFactor();
+            return value * unit.getFactor();
+        }
+
+        private double convertFromBaseUnit(double baseValue, LengthUnit targetUnit) {
+            return baseValue / targetUnit.getFactor();
         }
 
         public Length convertTo(LengthUnit targetUnit) {
@@ -39,10 +48,25 @@ public class QuantityMeasurementApp {
             if (targetUnit == null)
                 throw new IllegalArgumentException("Target unit cannot be null");
 
-            double baseValue = convertToBaseUnit();
-            double convertedValue = baseValue / targetUnit.getConversionFactor();
+            double base = convertToBaseUnit();
+            double converted = convertFromBaseUnit(base, targetUnit);
 
-            return new Length(convertedValue, targetUnit);
+            return new Length(converted, targetUnit);
+        }
+
+        public Length add(Length other) {
+
+            if (other == null)
+                throw new IllegalArgumentException("Other length cannot be null");
+
+            double base1 = this.convertToBaseUnit();
+            double base2 = other.convertToBaseUnit();
+
+            double sumBase = base1 + base2;
+
+            double resultValue = convertFromBaseUnit(sumBase, this.unit);
+
+            return new Length(resultValue, this.unit);
         }
 
         public boolean compare(Length other) {
@@ -69,24 +93,13 @@ public class QuantityMeasurementApp {
         }
     }
 
-    // Static conversion API
-    public static double convert(double value, Length.LengthUnit source, Length.LengthUnit target) {
-
-        if (!Double.isFinite(value))
-            throw new IllegalArgumentException("Invalid numeric value");
-
-        if (source == null || target == null)
-            throw new IllegalArgumentException("Units cannot be null");
-
-        double baseValue = value * source.getConversionFactor();
-        return baseValue / target.getConversionFactor();
-    }
-
     public static void main(String[] args) {
 
-        System.out.println(convert(1.0, Length.LengthUnit.FEET, Length.LengthUnit.INCHES));
-        System.out.println(convert(3.0, Length.LengthUnit.YARDS, Length.LengthUnit.FEET));
-        System.out.println(convert(36.0, Length.LengthUnit.INCHES, Length.LengthUnit.YARDS));
-        System.out.println(convert(1.0, Length.LengthUnit.CENTIMETERS, Length.LengthUnit.INCHES));
+        Length l1 = new Length(1.0, Length.LengthUnit.FEET);
+        Length l2 = new Length(12.0, Length.LengthUnit.INCHES);
+
+        Length result = l1.add(l2);
+
+        System.out.println(result);
     }
 }
