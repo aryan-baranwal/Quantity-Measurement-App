@@ -25,6 +25,7 @@ public class QuantityMeasurementApp {
         }
 
         public Length(double value, LengthUnit unit) {
+
             if (!Double.isFinite(value))
                 throw new IllegalArgumentException("Invalid value");
 
@@ -33,6 +34,14 @@ public class QuantityMeasurementApp {
 
             this.value = value;
             this.unit = unit;
+        }
+
+        public double getValue() {
+            return value;
+        }
+
+        public LengthUnit getUnit() {
+            return unit;
         }
 
         private double convertToBaseUnit() {
@@ -54,19 +63,31 @@ public class QuantityMeasurementApp {
             return new Length(converted, targetUnit);
         }
 
+        // UC6 addition (result in unit of first operand)
         public Length add(Length other) {
 
             if (other == null)
                 throw new IllegalArgumentException("Other length cannot be null");
 
-            double base1 = this.convertToBaseUnit();
-            double base2 = other.convertToBaseUnit();
+            double baseSum = this.convertToBaseUnit() + other.convertToBaseUnit();
+            double result = convertFromBaseUnit(baseSum, this.unit);
 
-            double sumBase = base1 + base2;
+            return new Length(result, this.unit);
+        }
 
-            double resultValue = convertFromBaseUnit(sumBase, this.unit);
+        // UC7 addition with explicit target unit
+        public Length add(Length other, LengthUnit targetUnit) {
 
-            return new Length(resultValue, this.unit);
+            if (other == null)
+                throw new IllegalArgumentException("Other length cannot be null");
+
+            if (targetUnit == null)
+                throw new IllegalArgumentException("Target unit cannot be null");
+
+            double baseSum = this.convertToBaseUnit() + other.convertToBaseUnit();
+            double result = convertFromBaseUnit(baseSum, targetUnit);
+
+            return new Length(result, targetUnit);
         }
 
         public boolean compare(Length other) {
@@ -89,7 +110,7 @@ public class QuantityMeasurementApp {
 
         @Override
         public String toString() {
-            return String.format("%.2f %s", value, unit);
+            return String.format("%.3f %s", value, unit);
         }
     }
 
@@ -98,8 +119,9 @@ public class QuantityMeasurementApp {
         Length l1 = new Length(1.0, Length.LengthUnit.FEET);
         Length l2 = new Length(12.0, Length.LengthUnit.INCHES);
 
-        Length result = l1.add(l2);
-
-        System.out.println(result);
+        System.out.println(l1.add(l2));
+        System.out.println(l1.add(l2, Length.LengthUnit.FEET));
+        System.out.println(l1.add(l2, Length.LengthUnit.INCHES));
+        System.out.println(l1.add(l2, Length.LengthUnit.YARDS));
     }
 }

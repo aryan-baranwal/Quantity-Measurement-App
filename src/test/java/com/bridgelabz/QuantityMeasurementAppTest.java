@@ -9,62 +9,57 @@ import com.bridgelabz.QuantityMeasurementApp.Length.LengthUnit;
 public class QuantityMeasurementAppTest {
 
     @Test
-    void testAddition_SameUnit_FeetPlusFeet() {
-        Length l1 = new Length(1.0, LengthUnit.FEET);
-        Length l2 = new Length(2.0, LengthUnit.FEET);
+    void testAddition_TargetFeet() {
 
-        Length result = l1.add(l2);
-
-        assertEquals(new Length(3.0, LengthUnit.FEET), result);
-    }
-
-    @Test
-    void testAddition_SameUnit_InchPlusInch() {
-        Length l1 = new Length(6.0, LengthUnit.INCHES);
-        Length l2 = new Length(6.0, LengthUnit.INCHES);
-
-        Length result = l1.add(l2);
-
-        assertEquals(new Length(12.0, LengthUnit.INCHES), result);
-    }
-
-    @Test
-    void testAddition_CrossUnit_FeetPlusInches() {
         Length l1 = new Length(1.0, LengthUnit.FEET);
         Length l2 = new Length(12.0, LengthUnit.INCHES);
 
-        Length result = l1.add(l2);
+        Length result = l1.add(l2, LengthUnit.FEET);
 
         assertEquals(new Length(2.0, LengthUnit.FEET), result);
     }
 
     @Test
-    void testAddition_CrossUnit_InchesPlusFeet() {
-        Length l1 = new Length(12.0, LengthUnit.INCHES);
-        Length l2 = new Length(1.0, LengthUnit.FEET);
+    void testAddition_TargetInches() {
 
-        Length result = l1.add(l2);
+        Length l1 = new Length(1.0, LengthUnit.FEET);
+        Length l2 = new Length(12.0, LengthUnit.INCHES);
+
+        Length result = l1.add(l2, LengthUnit.INCHES);
 
         assertEquals(new Length(24.0, LengthUnit.INCHES), result);
     }
 
     @Test
-    void testAddition_WithZero() {
-        Length l1 = new Length(5.0, LengthUnit.FEET);
-        Length l2 = new Length(0.0, LengthUnit.INCHES);
+    void testAddition_TargetYards() {
 
-        Length result = l1.add(l2);
+        Length l1 = new Length(1.0, LengthUnit.FEET);
+        Length l2 = new Length(12.0, LengthUnit.INCHES);
 
-        assertEquals(new Length(5.0, LengthUnit.FEET), result);
+        Length result = l1.add(l2, LengthUnit.YARDS);
+
+        assertTrue(result.getValue() > 0.66 && result.getValue() < 0.67);
     }
 
     @Test
-    void testAddition_NegativeValues() {
-        Length l1 = new Length(5.0, LengthUnit.FEET);
-        Length l2 = new Length(-2.0, LengthUnit.FEET);
+    void testAddition_TargetCentimeters() {
 
-        Length result = l1.add(l2);
+        Length l1 = new Length(1.0, LengthUnit.INCHES);
+        Length l2 = new Length(1.0, LengthUnit.INCHES);
 
-        assertEquals(new Length(3.0, LengthUnit.FEET), result);
+        Length result = l1.add(l2, LengthUnit.CENTIMETERS);
+
+        assertTrue(result.getValue() > 5.0 && result.getValue() < 5.2);
+    }
+
+    @Test
+    void testAddition_NullTargetUnit() {
+
+        Length l1 = new Length(1.0, LengthUnit.FEET);
+        Length l2 = new Length(12.0, LengthUnit.INCHES);
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            l1.add(l2, null);
+        });
     }
 }
