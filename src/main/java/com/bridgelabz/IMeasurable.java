@@ -2,15 +2,21 @@ package com.bridgelabz;
 
 public interface IMeasurable {
 
+    String getUnitName();
+
     double getConversionFactor();
 
-    default double convertToBaseUnit(double value) {
-        return value * getConversionFactor();
+    double convertToBaseUnit(double value);
+
+    double convertFromBaseUnit(double baseValue);
+
+    SupportsArithmetic supportsArithmetic = () -> true;
+
+    default boolean supportsArithmetic() {
+        return supportsArithmetic.isSupported();
     }
 
-    default double convertFromBaseUnit(double baseValue) {
-        return baseValue / getConversionFactor();
+    default void validateOperationSupport(String operation) {
+        // Default: allow operations
     }
-
-    String getUnitName();
 }
