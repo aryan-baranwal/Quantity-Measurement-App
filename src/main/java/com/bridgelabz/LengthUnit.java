@@ -1,6 +1,6 @@
 package com.bridgelabz;
 
-public enum LengthUnit {
+public enum LengthUnit implements IMeasurable {
 
     FEET(1.0),
     INCHES(1.0 / 12.0),
@@ -17,13 +17,7 @@ public enum LengthUnit {
         return conversionFactor;
     }
 
-    // Convert this unit to base unit (feet)
-    public double convertToBaseUnit(double value) {
-        return value * conversionFactor;
-    }
-
-    // Convert from base unit (feet) to this unit
-    public double convertFromBaseUnit(double baseValue) {
-        return baseValue / conversionFactor;
+    public String getUnitName() {
+        return name();
     }
 }
